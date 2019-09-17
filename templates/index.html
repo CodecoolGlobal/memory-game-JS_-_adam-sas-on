@@ -1,0 +1,6 @@
+{% extends "layout.html" %}
+{% block content %}
+  {% for n in range(memo_count or 24) %}
+	<div class="box col">.</div>
+  {% endfor %}
+{% endblock %}

@@ -1,0 +1,11 @@
+<script type="text/javascript">
+(function(d){// lazy-loading;
+	var a=d.getElementsByTagName("head")[0],b=d.createElement("script");
+	b.src = "{{url_for('static', filename='js/script.js')}}";
+	b.async = true;
+	b.onload = function(){
+		App_.init();
+	}
+	a.appendChild(b);
+})(document);
+</script>

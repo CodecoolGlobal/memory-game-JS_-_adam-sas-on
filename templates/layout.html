@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=utf-8">
+  <meta property="og:title" content="Memory game" />
+  <title>Memory game</title>
+  <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/style.css') }}" />
+</head>
+<body>
+  <div class="menu"> <div class="left">Memo game</div> <div id="menu_left" class="right">.</div> </div>
+  <div class="content-wrapper">
+	{% block content %}{% endblock %}
+  </div>
+  <div id="content-message">
+	{% include 'message.html' %}
+  </div>
+  {% include 'js_lazy_loading.html' %}
+</body>
+</html>
+
