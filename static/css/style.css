@@ -12,6 +12,9 @@ body {
 	margin: 0px;
 	background: #000036;
 }
+input, select, textarea {
+	font-size: 15pt;
+}
 
 .content-wrapper {
 	-webkit-box-sizing: border-box;
@@ -66,5 +69,29 @@ border-radius: 4px;*/
 
 .menu .right {
 	float: right;
+	margin-right: 1.5em;
+}
+
+#content-message {
+	position: fixed;
+	top: 0;
+	width: 100%;
+	height: 100%;
+	background:rgba(0, 0, 0, 0.5);
+	text-align: center;
+}
+.message {
+	position: relative;
+	top: 50%;
+	border: 1px solid #000;
+	display: inline-block;
+	padding: 1em;
+	background: #CCC;
+	-webkit-box-shadow: 3px 3px 6px 8px rgba(190, 190, 190, .7);
+	-moz-box-shadow: 3px 3px 6px 8px rgba(190, 190, 190, .7);
+	box-shadow: 3px 3px 6px 8px rgba(190, 190, 190, .7);
+	-webkit-border-radius: 10px;
+	-moz-border-radius: 10px;
+	border-radius: 10px;
 }
 
