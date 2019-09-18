@@ -1,5 +1,5 @@
 var App_ = (function(){
-	var page, cfg, instance;
+	var page, memo, cfg, instance;
 
 	function App_(){
 		if(instance == null){
@@ -27,10 +27,15 @@ var App_ = (function(){
 				cfg.addEvent = 1;
 			}
 
-			page = {menu:null, node:null, pos:1, timeout:false};
+			page = {menu: null};
+			memo = {memos:[], node:null, pos:1, timeout:false};
 		}
 
 		return instance;
+	}
+
+	function setUp(args){
+	
 	}
 
 	function getCssPrefix(){
@@ -46,6 +51,14 @@ var App_ = (function(){
 			}
 		}
 		cfg.prefix = value;
+	}
+
+	function getByID(id_str){
+		var result;
+		try {
+			result = document.getElementById(id_str);
+		} catch(e){result=null;}
+		return result;
 	}
 
 	function startGradient(e){
