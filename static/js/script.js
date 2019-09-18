@@ -80,7 +80,7 @@ var App_ = (function(){
 		return result;
 	}
 
-	function reCreateMeno(e){
+	function reCreateMemo(e){
 		var count = "";
 		if(page.select){
 			count = page.select.options[page.select.selectedIndex].value;
@@ -88,11 +88,27 @@ var App_ = (function(){
 		}
 		if(!isNumber(count) ) count = 12;// if no way to select number of memos, then use the default numbers of memos in this game;
 
-		var nodes = document.getElementsByClassName("box"), i = nodes.length - 1, memoDiv;
-		if(i >= 0) memoDiv = nodes[0].parentNode;
-		for(; i >= 0; i--){
-			memoDiv.removeChild(nodes[i]);
+		memo.memos = [];
+		for(var i = 1; i <= count; i++){// create array of numbers;
+			memo.memos.push(i);
+			memo.memos.push(i);
 		}
+		shuffle(memo.memos);
+		console.log(memo.memos);
+
+		var nodes = document.getElementsByClassName("box"), memoDiv = false;
+		i = nodes.length - 1;
+		// get node parent of memo cards or "content-wrapper" container as default;
+		if(i >= 0) memoDiv = nodes[0].parentNode;
+		else {
+			memoDiv = document.getElementsByClassName("content-wrapper");
+			if(memoDiv.length) memoDiv = memoDiv[0];
+			else memoDiv = false;
+		}
+
+		if(memoDiv == false) return;
+
+		clearNode(memoDiv);
 
 		nodes = [];
 		var card;
@@ -112,6 +128,28 @@ var App_ = (function(){
 
 	function isNumber(value){
 		return ( Object.prototype.toString.call(value)!=='[object Array]' && (value-parseFloat(value)+1)>=0)?true:false;
+	}
+
+	function shuffle(array){
+		var index = array.length, temp, randIndex;
+
+		// While there remain elements to shuffle...
+		while(0 !== index){
+			// Pick a remaining element...
+			randIndex = Math.floor(Math.random() * index);
+			index -= 1;
+
+			// And swap it with the current element.
+			temp = array[index];
+			array[index] = array[randIndex];
+			array[randIndex] = temp;
+		}
+
+		return array;
+	}
+
+	function clearNode(node){
+		while(node.firstChild) node.removeChild(node.firstChild);
 	}
 
 	function startGradient(e){
@@ -153,9 +191,9 @@ var App_ = (function(){
 		var nodes = document.getElementsByClassName("box");
 		runMemos(nodes);
 		if(cfg.addEvent == 1){
-			if(page.btn) page.btn.addEventListener("click", reCreateMeno, false);
+			if(page.btn) page.btn.addEventListener("click", reCreateMemo, false);
 		} else {
-			if(page.btn) page.btn.onclick = reCreateMeno;
+			if(page.btn) page.btn.onclick = reCreateMemo;
 		}
 	}
 	function runMemos(memoNodes){
