@@ -27,7 +27,7 @@ var App_ = (function(){
 				cfg.addEvent = 1;
 			}
 
-			page = {menu: null};
+			page = {menu: null, form: null, select: null, btn: null};
 			memo = {memos:[], node:null, pos:1, timeout:false};
 		}
 
@@ -35,7 +35,8 @@ var App_ = (function(){
 	}
 
 	function setUp(args){
-	
+		page.menu = getByID("content-message");
+
 	}
 
 	function getCssPrefix(){
@@ -63,34 +64,34 @@ var App_ = (function(){
 
 	function startGradient(e){
 		var event = (!e)?window.event:e;
-		if(event.target) page.node = event.target;
-		else if(event.srcElement) page.node = event.srcElement;
+		if(event.target) memo.node = event.target;
+		else if(event.srcElement) memo.node = event.srcElement;
 
-		page.pos = 0;
+		memo.pos = 0;
 		nextGradient();
-		page.timeout = setInterval(nextGradient, 10);
+		memo.timeout = setInterval(nextGradient, 10);
 	}
 	function nextGradient(){
-		if(page.pos == 140){
-			page.node.style.background = "#FFF";
-			clearInterval(page.timeout);
-			page.timeout = false;
-			page.pos = 1;
+		if(memo.pos == 140){
+			memo.node.style.background = "#FFF";
+			clearInterval(memo.timeout);
+			memo.timeout = false;
+			memo.pos = 1;
 			return;
 		}
 
-		page.pos += 2;
+		memo.pos += 2;
 		var percentages = [0, 0, 0];
-		percentages[2] = Math.min(100, page.pos);
-		if(page.pos > 20) percentages[1] = Math.min(100, page.pos - 20);
-		if(page.pos > 40) percentages[0] = page.pos - 40;
+		percentages[2] = Math.min(100, memo.pos);
+		if(memo.pos > 20) percentages[1] = Math.min(100, memo.pos - 20);
+		if(memo.pos > 40) percentages[0] = memo.pos - 40;
 
-		page.node.style.background = cfg.prefix + "linear-gradient(145deg, #FFF " + percentages[0] + "%, #CCC " + percentages[1] + "%, #FFF " + percentages[2] + "%)";
+		memo.node.style.background = cfg.prefix + "linear-gradient(145deg, #FFF " + percentages[0] + "%, #CCC " + percentages[1] + "%, #FFF " + percentages[2] + "%)";
 	}
 	function stopGradient(){
-		page.node.style.background = "";
-		if(page.timeout != false) clearInterval(page.timeout);
-		page.timeout = false;
+		memo.node.style.background = "";
+		if(memo.timeout != false) clearInterval(memo.timeout);
+		memo.timeout = false;
 	}
 
 	function run(){
