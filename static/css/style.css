@@ -23,6 +23,7 @@ input, select, textarea {
 	width: 100%;
 	padding: 2%;
 	float: left;
+	align-items: center !important;
 }
 
 .box {
@@ -32,6 +33,7 @@ input, select, textarea {
 	padding:2% 4%;
 	border: 1px solid #000;
 	text-align: center;
+	align-items: center !important;
 	vertical-align: middle;
 /*-webkit-border-radius: 4px;
 -moz-border-radius: 4px;
