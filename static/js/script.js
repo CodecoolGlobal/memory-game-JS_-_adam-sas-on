@@ -27,8 +27,8 @@ var App_ = (function(){
 				cfg.addEvent = 1;
 			}
 
-			page = {menu: null, form: null, select: null, btn: null};
-			memo = {memos:[], cardOpen: null, cardIndex: -1, node:null, pos:1, timeout:false};
+			page = {menu: null, form: null, select: null, btn: null, icons:[]};
+			memo = {memos: [], cards: [], cardOpen: null, cardIndex: -1, node: null, pos: 1, timeout: false};
 		}
 
 		return instance;
@@ -54,6 +54,9 @@ var App_ = (function(){
 			}
 
 		}
+
+	}
+	function setCards(args){
 
 	}
 
@@ -129,6 +132,12 @@ var App_ = (function(){
 	function isNumber(value){
 		return ( Object.prototype.toString.call(value)!=='[object Array]' && (value-parseFloat(value)+1)>=0)?true:false;
 	}
+	function isString(str){
+		var result = false;
+		if( typeof str == "string" || (typeof st == "object" && st.constructor === String) ) result = true;
+		if(result === true && str.length == 0) result = false;
+		return result;
+	}
 
 	function shuffle(array){
 		var index = array.length, temp, randIndex;
@@ -190,6 +199,12 @@ var App_ = (function(){
 			card.style.background = "#FFF";
 		}
 
+	}
+	function closeWrongCards(){
+		memo.cardOpen.style.background = "";
+
+		memo.cardOpen = null;
+		memo.cardIndex = -1;
 	}
 
 	function startGradient(e){
