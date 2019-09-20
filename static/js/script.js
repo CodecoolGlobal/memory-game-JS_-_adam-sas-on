@@ -226,7 +226,7 @@ var App_ = (function(){
 
 		stopGradient();
 		card.style.background = "#FFF";
-		card.appendChild(document.createTextNode(memo.memos[i]) );
+		card.firstChild.className = memo.memos[i];
 
 		if(memo.cardIndex >= 0){
 			memo.card2open = memo.cards.indexOf(card);
@@ -258,8 +258,8 @@ var App_ = (function(){
 	function closeWrongCards(){
 		var card = memo.cards[memo.cardOpen], card2 = memo.cards[memo.card2open];
 
-		clearNode(card);
-		clearNode(card2);
+		card.firstChild.className  = page.iconDefault;// clearNode(card);
+		card2.firstChild.className = page.iconDefault;// clearNode(card2);
 		card.style.background = "";
 		card2.style.background = "";
 
