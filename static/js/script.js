@@ -28,7 +28,7 @@ var App_ = (function(){
 			}
 
 			page = {menu: null, form: null, select: null, btn: null};
-			memo = {memos:[], node:null, pos:1, timeout:false};
+			memo = {memos:[], cardOpen: null, cardIndex: -1, node:null, pos:1, timeout:false};
 		}
 
 		return instance;
@@ -152,6 +152,46 @@ var App_ = (function(){
 		while(node.firstChild) node.removeChild(node.firstChild);
 	}
 
+	function openMemoCard(e){
+		var event = (!e)?window.event:e, card;
+		if(event.target) card = event.target;
+		else if(event.srcElement) card = event.srcElement;
+
+		var i = 0, node = card;
+		while((node=node.previousSibling)!=null){
+			if(node.tagName.toLowerCase() == "div") i++;
+		}
+
+		stopGradient();
+		card.style.background = "#FFF";
+		card.appendChild(document.createTextNode(memo.memos[i]) );
+
+		if(memo.cardIndex >= 0){
+			if(memo.memos[memo.cardIndex] == memo.memos[i]){// second card is correct;
+				removeMemoEvent(card);
+			} else {// wrong card;
+				clearNode(card);
+				clearNode(memo.cardOpen);
+
+				card.style.background = "";
+				memo.cardOpen.style.background = "";
+				node = [];
+				node.push(memo.cardOpen);
+				runMemos(node);
+			}
+			console.dir(memo.cardOpen);
+			memo.cardOpen = null;
+			memo.cardIndex = -1;
+		} else {
+			memo.cardIndex = i;
+			memo.cardOpen = card;
+
+			removeMemoEvent(card);
+			card.style.background = "#FFF";
+		}
+
+	}
+
 	function startGradient(e){
 		var event = (!e)?window.event:e;
 		if(event.target) memo.node = event.target;
@@ -204,12 +244,25 @@ var App_ = (function(){
 			for(; i >= 0; i--){
 				memoNodes[i].addEventListener("mouseover", startGradient, false);
 				memoNodes[i].addEventListener("mouseout", stopGradient, false);
+				memoNodes[i].addEventListener("click", openMemoCard, false);
 			}
 		} else {
 			for(; i >= 0; i--){
 				memoNodes[i].onmouseover = startGradient;
 				memoNodes[i].onmouseout = stopGradient;
+				memoNodes[i].onclick = openMemoCard;
 			}
+		}
+	}
+	function removeMemoEvent(memoNode){
+		if(cfg.addEvent == 1){
+			memoNode.removeEventListener("mouseover", startGradient);
+			memoNode.removeEventListener("mouseout", stopGradient);
+			memoNode.removeEventListener("click", openMemoCard);
+		} else {
+			memoNode.onmouseover = function(){};
+			memoNode.onmouseout = function(){};
+			memoNode.onclick = function(){};
 		}
 	}
 
