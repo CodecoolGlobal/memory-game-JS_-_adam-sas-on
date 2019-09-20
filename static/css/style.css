@@ -48,6 +48,10 @@ border-radius: 4px;*/
 	float: left;
 }
 
+.box span {
+	font-size:3em;
+}
+
 .menu {
 	-webkit-box-sizing: border-box;
 	-moz-box-sizing: border-box;
