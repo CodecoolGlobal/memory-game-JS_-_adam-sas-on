@@ -1,3 +1,37 @@
+if(!Array.prototype.indexOf) {// 60% support (2019);
+	Array.prototype.indexOf = function(needle){
+		for(var i = 0; i < this.length; i++){
+			if(this[i] === needle){
+				return i;}
+		}
+		return -1;
+	};
+};
+if(!Array.prototype.splice) {// 89% support (2019);
+	Array.prototype.splice = function(){/* start, toRemove, values2add; */
+		var args=Array().slice.call(arguments);
+
+		if(args.length == 0) return null;/* undefined should be returned; */
+
+		var removed = [], that = [],
+		    i = 0, j, n2rm;
+		if(args.length > 1) n2rm = args[1];
+		else n2rm = this.length + 1;/* just in case +1 but unnecesary; */
+
+		that = this.slice();/* for(i = 0; i < this.length; i++) that.push(this[i]); */
+		this.length = 0;
+
+		for(i = 0; i < args[0] && i < that.length; i++) this.push(that[i]);
+		for(j = 0; i < that.length && j < n2rm; i++, j++) removed.push(that[i]);
+		for(j = 2; j < args.length; j++) this.push(args[j]);/* will happened if args.length > 2; */
+		for(; i < that.length; i++) this.push(that[i]);/* will be executed if args.length > 1 and args[1] is small enough; */
+
+		/* this = that; forbidden! ReferenceError: Invalid assignment left-hand side; */
+		return removed;
+	};
+};
+
+
 var App_ = (function(){
 	var page, memo, cfg, instance;
 
@@ -27,8 +61,8 @@ var App_ = (function(){
 				cfg.addEvent = 1;
 			}
 
-			page = {menu: null, form: null, select: null, btn: null, icons:[]};
-			memo = {memos: [], cards: [], cardOpen: null, cardIndex: -1, node: null, pos: 1, timeout: false};
+			page = {menu: null, form: null, select: null, btn: null, icons:[], iconDefault: "", opens: 0};
+			memo = {memos: [], cards: [], cardOpen: -1, cardIndex: -1, card2open: -1, node: null, pos: 1, timeout: false};
 		}
 
 		return instance;
@@ -54,9 +88,22 @@ var App_ = (function(){
 			}
 
 		}
-
+		setCards(args);
 	}
 	function setCards(args){
+		page.iconDefault = "fas fa-code-branch";
+		if(args.hasOwnProperty("iconDefault") ){
+			if( isString(args.iconDefault) ) page.iconDefault = args.iconDefault;
+		}
+
+		page.icons = ["fas fa-code", "fas fa-bicycle", "fas fa-charging-station", "fas fa-fighter-jet", "fas fa-space-shuttle",
+				"fas fa-globe-europe", "fas fa-laptop-code", "fas fa-microchip", "fas fa-sim-card", "fas fa-database",
+				"fas fa-recycle", "fas fa-box-open", "fas fa-inbox", "fas fa-key" , "fas fa-lock-open",
+				"fas fa-solar-panel", "fas fa-download", "fas fa-peace", "fas fa-layer-group", "fas fa-info-circle"];
+
+		var nodes = document.getElementsByClassName("box"), i;
+		for(i = 0; i < nodes.length; i++)
+			memo.cards.push(nodes[i]);// to enable removing correctly opened cards;
 
 	}
 
@@ -113,16 +160,16 @@ var App_ = (function(){
 
 		clearNode(memoDiv);
 
-		nodes = [];
+		memo.cards = [];
 		var card;
 		for(i = count*2; i > 0; i--){
 			card = document.createElement("div");
 			card.className="box col";
 			memoDiv.appendChild(card);
-			nodes.push(card);
+			memo.cards.push(card);
 		}
 
-		runMemos(nodes);
+		runMemos(memo.cards);
 
 		var event = (e)?e:window.event;
 		event.preventDefault();
@@ -176,24 +223,27 @@ var App_ = (function(){
 		card.appendChild(document.createTextNode(memo.memos[i]) );
 
 		if(memo.cardIndex >= 0){
+			memo.card2open = memo.cards.indexOf(card);
+			console.log(memo.memos[memo.cardIndex]);console.log(memo.memos[i]);
+
 			if(memo.memos[memo.cardIndex] == memo.memos[i]){// second card is correct;
 				removeMemoEvent(card);
-			} else {// wrong card;
-				clearNode(card);
-				clearNode(memo.cardOpen);
 
-				card.style.background = "";
-				memo.cardOpen.style.background = "";
-				node = [];
-				node.push(memo.cardOpen);
-				runMemos(node);
+				memo.cards.splice(memo.cardOpen, 1);
+				memo.cards.splice(memo.card2open, 1);
+				memo.cardOpen = memo.card2open = -1;
+				memo.cardIndex = -1;
+			} else {// wrong card;
+				for(i = memo.cards.length - 1; i >= 0; i--){
+					if(i == memo.cardOpen) continue;
+					removeMemoEvent(memo.cards[i]);
+				}
+
+				setTimeout(closeWrongCards, 1000);
 			}
-			console.dir(memo.cardOpen);
-			memo.cardOpen = null;
-			memo.cardIndex = -1;
 		} else {
 			memo.cardIndex = i;
-			memo.cardOpen = card;
+			memo.cardOpen = memo.cards.indexOf(card);
 
 			removeMemoEvent(card);
 			card.style.background = "#FFF";
@@ -201,10 +251,18 @@ var App_ = (function(){
 
 	}
 	function closeWrongCards(){
-		memo.cardOpen.style.background = "";
+		var card = memo.cards[memo.cardOpen], card2 = memo.cards[memo.card2open];
 
-		memo.cardOpen = null;
+		clearNode(card);
+		clearNode(card2);
+		card.style.background = "";
+		card2.style.background = "";
+
+		runMemos(memo.cards);
+
+		memo.cardOpen = -1;
 		memo.cardIndex = -1;
+		memo.card2open = -1;
 	}
 
 	function startGradient(e){
@@ -243,8 +301,7 @@ var App_ = (function(){
 		if(cfg.initialized > 1) return;
 		cfg.initialized += 1;
 
-		var nodes = document.getElementsByClassName("box");
-		runMemos(nodes);
+		runMemos(memo.cards);
 		if(cfg.addEvent == 1){
 			if(page.btn) page.btn.addEventListener("click", reCreateMemo, false);
 		} else {
