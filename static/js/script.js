@@ -139,9 +139,9 @@ var App_ = (function(){
 		if(!isNumber(count) ) count = 12;// if no way to select number of memos, then use the default numbers of memos in this game;
 
 		memo.memos = [];
-		for(var i = 1; i <= count; i++){// create array of numbers;
-			memo.memos.push(i);
-			memo.memos.push(i);
+		for(var i = 0; i < count; i++){// create array of numbers;
+			memo.memos.push(page.icons[i]);
+			memo.memos.push(page.icons[i]);
 		}
 		shuffle(memo.memos);
 		console.log(memo.memos);
@@ -162,9 +162,15 @@ var App_ = (function(){
 
 		memo.cards = [];
 		var card;
-		for(i = count*2; i > 0; i--){
+		count = count*2;
+		for(i = 0; i < count; i++){
 			card = document.createElement("div");
 			card.className="box col";
+
+			nodes = document.createElement("span");
+			nodes.className = page.iconDefault;
+			card.appendChild(nodes);
+
 			memoDiv.appendChild(card);
 			memo.cards.push(card);
 		}
@@ -224,7 +230,6 @@ var App_ = (function(){
 
 		if(memo.cardIndex >= 0){
 			memo.card2open = memo.cards.indexOf(card);
-			console.log(memo.memos[memo.cardIndex]);console.log(memo.memos[i]);
 
 			if(memo.memos[memo.cardIndex] == memo.memos[i]){// second card is correct;
 				removeMemoEvent(card);
