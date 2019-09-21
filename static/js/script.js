@@ -215,9 +215,9 @@ var App_ = (function(){
 	}
 
 	function openMemoCard(e){
-		var event = (!e)?window.event:e, card;
-		if(event.target) card = event.target;
-		else if(event.srcElement) card = event.srcElement;
+		var event = (!e)?window.event:e, card = this;
+		/*if(event.target) card = event.target;
+		else if(event.srcElement) card = event.srcElement;*/
 
 		var i = 0, node = card;
 		while((node=node.previousSibling)!=null){
@@ -259,8 +259,8 @@ var App_ = (function(){
 		var card = memo.cards[memo.cardOpen], card2 = memo.cards[memo.card2open];
 
 		card.firstChild.className  = page.iconDefault;// clearNode(card);
-		card2.firstChild.className = page.iconDefault;// clearNode(card2);
 		card.style.background = "";
+		card2.firstChild.className = page.iconDefault;// clearNode(card2);
 		card2.style.background = "";
 
 		runMemos(memo.cards);
@@ -271,10 +271,7 @@ var App_ = (function(){
 	}
 
 	function startGradient(e){
-		var event = (!e)?window.event:e;
-		if(event.target) memo.node = event.target;
-		else if(event.srcElement) memo.node = event.srcElement;
-
+		memo.node = this;
 		memo.pos = 0;
 		nextGradient();
 		memo.timeout = setInterval(nextGradient, 10);
