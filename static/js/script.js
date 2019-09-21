@@ -210,6 +210,14 @@ var App_ = (function(){
 		return array;
 	}
 
+	function removeFromCards(){
+		var newCards = [], i = 0, n = memo.cards.length;
+		for(; i < n; i++){
+			if(i != memo.cardOpen && i != memo.card2open) newCards.push(memo.cards[i]);
+		}
+		memo.cards = newCards;
+	}
+
 	function clearNode(node){
 		while(node.firstChild) node.removeChild(node.firstChild);
 	}
@@ -234,8 +242,7 @@ var App_ = (function(){
 			if(memo.memos[memo.cardIndex] == memo.memos[i]){// second card is correct;
 				removeMemoEvent(card);
 
-				memo.cards.splice(memo.cardOpen, 1);
-				memo.cards.splice(memo.card2open, 1);
+				removeFromCards();
 				memo.cardOpen = memo.card2open = -1;
 				memo.cardIndex = -1;
 			} else {// wrong card;
