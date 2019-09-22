@@ -115,7 +115,7 @@ var App_ = (function(){
 				if(restCards < 1){
 					if(page.form){
 						clearBeforeNode(page.form);
-						var parent = page.form.parentNode, messages = ["Congratulations!", "You explored all cards", "in " + statistic.opens + " steps."], i;
+						var parent = page.form.parentNode, messages = ["Congratulation :)", "You explored all cards", "in " + statistic.opens + " steps."], i;
 						for(i = 0; i < messages.length; i++){
 							parent.insertBefore(document.createTextNode(messages[i]), page.form);
 							parent.insertBefore(document.createElement("br"), page.form);

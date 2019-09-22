@@ -16,11 +16,11 @@ def play():
 
         return render_template('index.html', form=True, memo_count=memo_count*2, menu_hide=True)
 
-    return render_template('index.html', form=True, menu_hide=True)
+    return render_template('index.html', form=True)
 #
 
 # https://codepen.io/natewiley/pen/HBrbL;
 
 if __name__ == '__main__':
-    app.run(port=8000,debug=True)
+    app.run(port=8000, debug=True)
 
