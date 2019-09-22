@@ -33,7 +33,7 @@ if(!Array.prototype.splice) {// 89% support (2019);
 
 
 var App_ = (function(){
-	var page, memo, cfg, instance;
+	var page, memo, statistic, cfg, instance;
 
 	function App_(){
 		if(instance == null){
@@ -61,8 +61,9 @@ var App_ = (function(){
 				cfg.addEvent = 1;
 			}
 
-			page = {menu: null, form: null, select: null, btn: null, icons:[], iconDefault: "", opens: 0};
+			page = {menu: null, form: null, select: null, btn: null, icons:[], iconDefault: ""};
 			memo = {memos: [], cards: [], cardOpen: -1, cardIndex: -1, card2open: -1, node: null, pos: 1, timeout: false};
+			statistic = {opens: 0, nodeCards: null, nodeOpens: null, messageFn:function(){} };
 		}
 
 		return instance;
@@ -88,6 +89,31 @@ var App_ = (function(){
 			}
 
 		}
+
+		var resultsId = "menu_left";
+		if(args.hasOwnProperty('menuResults') ){
+			if(isString(args.menuResults) ) resultsId = args.menuResults;
+		}
+		nodes = getByID(resultsId);
+		if(nodes){
+			clearNode(nodes);
+			nodes.appendChild(document.createTextNode("# of card pairs to open: ") );
+			statistic.nodeCards = document.createElement("span");
+			nodes.appendChild(statistic.nodeCards);
+
+			nodes.appendChild(document.createTextNode("; # of openings: ") );
+			statistic.nodeOpens = document.createElement("span");
+			nodes.appendChild(statistic.nodeOpens);
+
+			statistic.messageFn = function(){
+				var restCards = parseInt(memo.cards.length/2, 10);
+				statistic.nodeCards.innerHTML = "";
+				statistic.nodeCards.appendChild(document.createTextNode(restCards) );
+				statistic.nodeOpens.innerHTML = "";
+				statistic.nodeOpens.appendChild(document.createTextNode(statistic.opens) );
+			}
+		}
+
 		setCards(args);
 	}
 	function setCards(args){
@@ -144,7 +170,7 @@ var App_ = (function(){
 			memo.memos.push(page.icons[i]);
 		}
 		shuffle(memo.memos);
-		console.log(memo.memos);
+		statistic.opens = 0;
 
 		var nodes = document.getElementsByClassName("box"), memoDiv = false;
 		i = nodes.length - 1;
@@ -238,6 +264,7 @@ var App_ = (function(){
 
 		if(memo.cardIndex >= 0){
 			memo.card2open = memo.cards.indexOf(card);
+			statistic.opens += 1;
 
 			if(memo.memos[memo.cardIndex] == memo.memos[i]){// second card is correct;
 				removeMemoEvent(card);
@@ -253,6 +280,7 @@ var App_ = (function(){
 
 				setTimeout(closeWrongCards, 1000);
 			}
+			statistic.messageFn();
 		} else {
 			memo.cardIndex = i;
 			memo.cardOpen = memo.cards.indexOf(card);
