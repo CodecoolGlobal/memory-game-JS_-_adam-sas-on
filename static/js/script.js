@@ -111,6 +111,18 @@ var App_ = (function(){
 				statistic.nodeCards.appendChild(document.createTextNode(restCards) );
 				statistic.nodeOpens.innerHTML = "";
 				statistic.nodeOpens.appendChild(document.createTextNode(statistic.opens) );
+
+				if(restCards < 1){
+					if(page.form){
+						clearBeforeNode(page.form);
+						var parent = page.form.parentNode, messages = ["Congratulations!", "You explored all cards", "in " + statistic.opens + " steps."], i;
+						for(i = 0; i < messages.length; i++){
+							parent.insertBefore(document.createTextNode(messages[i]), page.form);
+							parent.insertBefore(document.createElement("br"), page.form);
+						}
+					}
+					page.menu.style.display = "";
+				}
 			}
 		}
 
@@ -127,10 +139,16 @@ var App_ = (function(){
 				"fas fa-recycle", "fas fa-box-open", "fas fa-inbox", "fas fa-key" , "fas fa-lock-open",
 				"fas fa-solar-panel", "fas fa-download", "fas fa-peace", "fas fa-layer-group", "fas fa-info-circle"];
 
-		var nodes = document.getElementsByClassName("box"), i;
-		for(i = 0; i < nodes.length; i++)
+		var nodes = document.getElementsByClassName("box"), i, j, isPair = false;
+		for(i = j = 0; i < nodes.length; i++){
 			memo.cards.push(nodes[i]);// to enable removing correctly opened cards;
-
+			memo.memos.push(page.icons[j]);
+			if(isPair && j < page.icons.length - 1){
+				j++;
+				isPair = false;
+			} else isPair = true;
+		}
+		shuffle(memo.memos);
 	}
 
 	function getCssPrefix(){
@@ -247,6 +265,10 @@ var App_ = (function(){
 	function clearNode(node){
 		while(node.firstChild) node.removeChild(node.firstChild);
 	}
+	function clearBeforeNode(node){
+		var parent = node.parentNode;
+		while(parent.firstChild !== node) parent.removeChild(parent.firstChild);
+	}
 
 	function openMemoCard(e){
 		var event = (!e)?window.event:e, card = this;
@@ -255,7 +277,7 @@ var App_ = (function(){
 
 		var i = 0, node = card;
 		while((node=node.previousSibling)!=null){
-			if(node.tagName.toLowerCase() == "div") i++;
+			if(node.nodeName.toLowerCase() == "div") i++;
 		}
 
 		stopGradient();
