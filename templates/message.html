@@ -3,7 +3,7 @@
 	{{ message }}
   {% endif %}
   {% if form %}
-	<form method="POST">
+	<form action="{{ url_for('play') }}" method="POST">
 	  <label>How many different cards would you like to play with
 	  <select name="memos">
 		<option value=2>2</option>

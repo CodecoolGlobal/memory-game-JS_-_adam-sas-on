@@ -12,7 +12,7 @@
   <div class="content-wrapper">
 	{% block content %}{% endblock %}
   </div>
-  <div id="content-message">
+  <div id="content-message" {%if menu_hide %}style="display:none"{% endif %}>
 	{% include 'message.html' %}
   </div>
   {% include 'js_lazy_loading.html' %}
